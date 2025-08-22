@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hot Link — +18</title>
+  <meta name="description" content="Página estilo Linktree com visual +18, um único botão para Telegram e contador de cliques." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Bebas+Neue&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg1: #0b0014;
+      --bg2: #22001f;
+      --bg3: #340018;
+      --accent: #ff2d55; /* hot pink */
+      --accent-2: #ff7a00; /* warm orange */
+      --text: #f7eaff;
+      --muted: #d7bfe6cc;
+      --card: #0f0318bf;
+      --glass: rgba(255, 255, 255, 0.06);
+      --border: rgba(255,255,255,.14);
+      --shadow: 0 10px 30px rgba(255, 45, 85, .35), 0 0 80px rgba(255, 122, 0, .2);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    body {
+      margin: 0; color: var(--text); font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(1200px 800px at 15% 20%, #200016 0%, transparent 60%),
+                  radial-gradient(900px 600px at 85% 30%, #2a000f 0%, transparent 60%),
+                  radial-gradient(1000px 700px at 50% 90%, #1c001c 0%, transparent 60%),
+                  linear-gradient(135deg, var(--bg1), var(--bg2) 50%, var(--bg3));
+      overflow-x: hidden;
+    }
+
+    /* Animated neon fog */
+    .fog {
+      position: fixed; inset: -20vh -20vw; pointer-events: none; filter: blur(60px) saturate(140%);
+      background: radial-gradient(40vw 40vh at 10% 20%, rgba(255,45,85,.35), transparent 70%),
+                  radial-gradient(35vw 35vh at 90% 10%, rgba(255,122,0,.28), transparent 70%),
+                  radial-gradient(45vw 50vh at 50% 90%, rgba(255,0,128,.25), transparent 70%);
+      animation: pulse 12s ease-in-out infinite alternate;
+      z-index: 0;
+    }
+    @keyframes pulse { from { transform: translateY(-2%) scale(1); } to { transform: translateY(2%) scale(1.06); } }
+
+    /* Top-right click counter */
+    .click-counter {
+      position: fixed; top: 14px; right: 16px; z-index: 5; display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 14px; backdrop-filter: blur(8px); background: var(--glass); border: 1px solid var(--border);
+      border-radius: 999px; font-weight: 700; letter-spacing: .3px; box-shadow: 0 4px 14px rgba(0,0,0,.35);
+    }
+    .click-dot { width: 10px; height: 10px; border-radius: 50%; background: conic-gradient(from 0deg, var(--accent), var(--accent-2)); box-shadow: 0 0 10px var(--accent); }
+
+    /* 18+ badge */
+    .badge18 {
+      position: fixed; left: 16px; top: 14px; z-index: 5; font-family: "Bebas Neue", Inter, sans-serif; letter-spacing: 1px;
+      display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border);
+      background: linear-gradient(90deg, rgba(255,45,85,.2), rgba(255,122,0,.18)); backdrop-filter: blur(8px); box-shadow: 0 4px 14px rgba(0,0,0,.35);
+    }
+    .badge18 span:first-child { display:inline-grid; place-items:center; width:28px; height:28px; border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, #fff 0 8%, transparent 9%), linear-gradient(135deg, var(--accent), var(--accent-2));
+      color:#000; font-weight:900; font-size:14px; }
+
+    /* Card */
+    .wrap { min-height: 100dvh; display: grid; place-items: center; padding: 32px; position: relative; z-index: 1; }
+    .card {
+      width: 100%; max-width: 520px; background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border: 1px solid var(--border); border-radius: 28px; padding: 28px; box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .avatar { width: 120px; height: 120px; border-radius: 50%; overflow: hidden; border: 3px solid rgba(255,255,255,.35); margin: 6px auto 14px; box-shadow: 0 10px 30px rgba(255, 45, 85, .35); }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    h1 {
+      margin: 0; text-align: center; font-size: clamp(28px, 3.2vw, 40px); line-height: 1.05; font-weight: 800;
+      background: linear-gradient(90deg, #fff, #ffd1e0, #fff); -webkit-background-clip: text; color: transparent;
+    }
+    .desc {
+      margin: 10px auto 18px; max-width: 44ch; text-align: center; color: var(--muted);
+      font-size: clamp(15px, 2.4vw, 17px);
+    }
+
+    /* Only one primary button */
+    .button {
+      display: block; width: 100%; text-decoration: none; font-weight: 800; letter-spacing: .4px; text-align: center;
+      padding: 18px 22px; border-radius: 18px; background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #1a001a; box-shadow: 0 14px 28px rgba(255,45,85,.35), 0 8px 18px rgba(255,122,0,.25);
+      transition: transform .08s ease, box-shadow .2s ease, filter .2s ease; border: none; cursor: pointer; font-size: 18px;
+    }
+    .button:hover { transform: translateY(-1px); filter: saturate(1.1); box-shadow: 0 18px 42px rgba(255,45,85,.45), 0 10px 26px rgba(255,122,0,.35); }
+    .button:active { transform: translateY(0); }
+
+    .tg-icon { width: 22px; height: 22px; vertical-align: -5px; margin-right: 10px; }
+
+    /* Footer note */
+    .note { margin-top: 16px; text-align:center; font-size: 12px; color: #e8d3f0a6; }
+    .note a { color: #ffd1e0; text-decoration: underline; }
+
+    /* Small sparkles */
+    .sparkles span { position: absolute; width: 3px; height: 3px; background: #fff; border-radius: 50%; opacity: .8; animation: twinkle 3s infinite ease-in-out alternate; box-shadow: 0 0 10px #fff; }
+    @keyframes twinkle { from { transform: translateY(0) scale(1); opacity: .85; } to { transform: translateY(-10px) scale(1.6); opacity: .35; } }
+
+    /* Responsive tweaks */
+    @media (max-width: 420px) {
+      .card { padding: 22px; border-radius: 22px; }
+      .avatar { width: 100px; height: 100px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="fog" aria-hidden="true"></div>
+
+  <div class="badge18" title="Conteúdo adulto (+18)"><span>18+</span><b>Conteúdo quente</b></div>
+
+  <div class="click-counter" id="clickCounterBox" title="Cliques no botão do Telegram">
+    <div class="click-dot"></div>
+    <span id="clickCounter">0</span> cliques
+  </div>
+
+  <div class="wrap">
+    <div class="card" role="main">
+      <div class="avatar" aria-label="Foto de ícone">
+        <!-- Troque o src abaixo pela sua foto/ícone -->
+        <img src="https://cdn.discordapp.com/attachments/1396956733254930602/1408580522673967204/download_2.jpeg?ex=68aa4256&is=68a8f0d6&hm=43f9b8949e1e925e3196219326d7cf2c47e868eb5af8c14ac9fcc9b24d59ce9a&" alt="Avatar" />
+      </div>
+
+      <h1 id="displayName">Caroliny dreher vazado 🔥</h1>
+      <p class="desc" id="bio">Clima quente, vibez intensas e conteúdo só para maiores. Toque abaixo para entrar no meu 🔥 Telegram.</p>
+
+      <a id="telegramBtn" class="button" href="#" target="_blank" rel="noopener">
+        <svg class="tg-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9.036 15.803l-.376 5.297c.538 0 .77-.232 1.047-.509l2.516-2.416 5.213 3.82c.956.538 1.636.232 1.898-.885l3.44-16.09h.001c.304-1.42-.513-1.976-1.44-1.631L1.51 11.028c-1.384.538-1.362 1.316-.235 1.671l5.33 1.662L19.7 6.72c.623-.41 1.19-.183.723.227L9.036 15.803z" fill="currentColor"/></svg>
+        Entrar no meu Telegram
+      </a>
+
+      <p class="note">Apenas para maiores de 18 anos. Ao continuar, você confirma que é maior de idade.</p>
+    </div>
+  </div>
+
+  <!-- Ambient sparkles -->
+  <div class="sparkles" aria-hidden="true"></div>
+
+  <script>
+    // =================== CONFIG RÁPIDA ===================
+    // 1) Coloque aqui o link do seu Telegram (ex.: https://t.me/seuusername)
+    const TELEGRAM_URL = "https://t.me/grupovipdreher_bot"; // <-- ALTERE AQUI
+
+    // 2) Nome e bio (opcional)
+    const DISPLAY_NAME = "Caroliny dreher 🔥"; // <-- ALTERE AQUI
+    const BIO = "Clima quente, vibez intensas e conteúdo todos os conteúdo vazado. Toque abaixo para entrar no meu 🔥 Telegram."; // <-- ALTERE AQUI
+
+    // 3) (Opcional) Troque a imagem no HTML acima (tag <img src="..."></img>)
+
+    // =================== LÓGICA ===================
+    const btn = document.getElementById('telegramBtn');
+    const counterEl = document.getElementById('clickCounter');
+
+    // Inicia conteúdo
+    document.getElementById('displayName').textContent = DISPLAY_NAME;
+    document.getElementById('bio').textContent = BIO;
+    btn.href = TELEGRAM_URL;
+
+    // Persistência local (sem back-end)
+    const KEY = 'telegramClickCount';
+    const getCount = () => parseInt(localStorage.getItem(KEY) || '0', 10);
+    const setCount = (n) => localStorage.setItem(KEY, String(n));
+
+    // Mostrar contador salvo
+    let count = getCount();
+    counterEl.textContent = count.toLocaleString('pt-BR');
+
+    // Incrementa ao clicar
+    btn.addEventListener('click', () => {
+      try {
+        count += 1;
+        setCount(count);
+        counterEl.textContent = count.toLocaleString('pt-BR');
+      } catch (e) {
+        // fallback visual (sem persistir)
+        counterEl.textContent = (Number(counterEl.textContent.replace(/\./g, '')) + 1).toLocaleString('pt-BR');
+      }
+      // Navegação ocorre naturalmente (sem preventDefault)
+    });
+
+    // Sparkles aleatórios
+    const sparklesWrap = document.querySelector('.sparkles');
+    function makeSparkles(n=32){
+      const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+      const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+      sparklesWrap.innerHTML = '';
+      for(let i=0;i<n;i++){
+        const s = document.createElement('span');
+        s.style.left = Math.random()*vw + 'px';
+        s.style.top = Math.random()*vh + 'px';
+        s.style.animationDelay = (Math.random()*3).toFixed(2)+'s';
+        s.style.opacity = (0.25 + Math.random()*0.75).toFixed(2);
+        sparklesWrap.appendChild(s);
+      }
+    }
+    makeSparkles();
+    addEventListener('resize', () => makeSparkles());
+
+    // Acessibilidade: Enter/Space ativa o botão quando focado
+    btn.addEventListener('keyup', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') btn.click();
+    });
+  </script>
+</body>
+</html>
